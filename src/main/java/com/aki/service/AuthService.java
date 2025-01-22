@@ -4,7 +4,9 @@ import com.aki.model.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,8 +17,9 @@ public class AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
 
     public Optional<String> loginUser(String username, String password) {
         logger.info("Attempting login for username: {}", username);
@@ -30,13 +33,18 @@ public class AuthService {
 
         UserDTO user = userOptional.get();
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            logger.warn("Login failed: Invalid password for username: {}", username);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+
+            String token = tokenService.generateToken(authentication);
+            logger.info("Login successful for username: {}", username);
+            return Optional.of(token);
+
+        } catch (Exception e) {
+            logger.error("Login failed: Authentication error for username: {}", username, e);
             return Optional.empty();
         }
-
-        logger.info("Login successful for username: {}", username);
-        String token = "placeholder";
-        return Optional.of(token);
     }
 }

@@ -17,8 +17,8 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
@@ -69,6 +69,7 @@ public class UserService {
 
             userDTO.setId(user.getId());
             userDTO.setUsername(user.getUsername());
+            userDTO.setPassword(user.getPassword());
             userDTO.setEmail(user.getEmail());
 
             return Optional.of(userDTO);
