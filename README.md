@@ -1,5 +1,7 @@
 # Aki - Idea Pooling and Feedback Platform
 
+Link to Ui: https://github.com/HishamHXS/Aki-UI
+
 ## Overview
 Aki is a minimalistic and anonymous idea pooling platform designed to allow users to share their ideas and receive random, unbiased feedback. The core purpose of Aki is to foster creativity and provide real-time input from a diverse audience in a simple, distraction-free environment.
 
