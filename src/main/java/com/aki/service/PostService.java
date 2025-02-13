@@ -19,6 +19,7 @@ public class PostService {
     public PostDTO createPost(PostDTO postDTO) {
         Post post = new Post();
         post.setUserID(postDTO.getUserId());
+        post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
 
         Post savedPost = postRepository.save(post);
@@ -38,6 +39,7 @@ public class PostService {
 
     public Optional<PostDTO> updatePost(Long id, PostDTO postDTO) {
         return postRepository.findById(id).map(existingPost -> {
+            existingPost.setTitle(postDTO.getTitle());
             existingPost.setContent(postDTO.getContent());
             existingPost.setLikes(postDTO.getLikes());
             Post updatedPost = postRepository.save(existingPost);

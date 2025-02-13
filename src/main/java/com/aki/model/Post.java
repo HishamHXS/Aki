@@ -13,8 +13,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private long userID;
+    private String title;
     private String content;
     private int likes;
     @CreationTimestamp

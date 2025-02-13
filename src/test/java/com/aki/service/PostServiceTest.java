@@ -34,6 +34,7 @@ class PostServiceTest {
         post = new Post();
         post.setId(1L);
         post.setUserID(12L);
+        post.setTitle("Test title");
         post.setContent("Test content");
         post.setLikes(0);
 
@@ -47,6 +48,7 @@ class PostServiceTest {
         PostDTO createdPost = postService.createPost(postDTO);
 
         assertNotNull(createdPost);
+        assertEquals(post.getTitle(), createdPost.getTitle());
         assertEquals(post.getContent(), createdPost.getContent());
         verify(postRepository, times(1)).save(any(Post.class));
     }
@@ -59,6 +61,7 @@ class PostServiceTest {
 
         assertFalse(posts.isEmpty());
         assertEquals(1, posts.size());
+        assertEquals(post.getTitle(), posts.getFirst().getTitle());
         assertEquals(post.getContent(), posts.getFirst().getContent());
     }
 
@@ -69,12 +72,14 @@ class PostServiceTest {
         Optional<PostDTO> retrievedPost = postService.getPostById(1L);
 
         assertTrue(retrievedPost.isPresent());
+        assertEquals(post.getTitle(), retrievedPost.get().getTitle());
         assertEquals(post.getContent(), retrievedPost.get().getContent());
     }
 
     @Test
     void testUpdatePost() {
         PostDTO updatedPostDTO = new PostDTO();
+        updatedPostDTO.setTitle("Updated title");
         updatedPostDTO.setContent("Updated content");
         updatedPostDTO.setLikes(10);
 
@@ -84,6 +89,7 @@ class PostServiceTest {
         Optional<PostDTO> updatedPost = postService.updatePost(1L, updatedPostDTO);
 
         assertTrue(updatedPost.isPresent());
+        assertEquals("Updated title", updatedPost.get().getTitle());
         assertEquals("Updated content", updatedPost.get().getContent());
         assertEquals(10, updatedPost.get().getLikes());
     }
