@@ -17,11 +17,10 @@ public class TokenService {
 
     private final JwtEncoder jwtEncoder;
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(Long userId, Authentication authentication) {
         Instant now = Instant.now();
         long expiry = 3600L;
 
-        String username = authentication.getName();
         String roles = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -31,7 +30,7 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
-                .subject(username)
+                .subject(String.valueOf(userId))
                 .claim("roles", roles)
                 .build();
 

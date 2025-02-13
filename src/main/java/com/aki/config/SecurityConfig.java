@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
 
@@ -48,6 +50,23 @@ public class SecurityConfig {
                         .jwt(Customizer.withDefaults()))
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .build();
+    }
+
+
+    /** THIS IS ONLY FOR DEVELOPMENT PURPOSES MEANING THAT IT HAS NOT BEEN SECURITY PROOFED. THIS WILL NOT BE PART OF
+     * MAIN.*/
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Allows all endpoints to accept cross-origin requests
+                        .allowedOrigins("http://localhost:5173") // The frontend URL
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
+                        .allowedHeaders("*") // Allows all headers
+                        .allowCredentials(true); // Allows cookies to be sent
+            }
+        };
     }
 
     @Bean

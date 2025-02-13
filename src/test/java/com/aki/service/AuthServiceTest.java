@@ -33,13 +33,15 @@ class AuthServiceTest {
     private AuthenticationManager authenticationManager;
 
     private UserDTO testUserDTO;
-    private String username = "testUser";
-    private String password = "testPassword";
-    private String token = "testToken";
+    private final Long userId = 1L;
+    private final String username = "testUser";
+    private final String password = "testPassword";
+    private final String token = "testToken";
 
     @BeforeEach
     void setUp() {
         testUserDTO = new UserDTO();
+        testUserDTO.setId(userId);
         testUserDTO.setUsername(username);
         testUserDTO.setPassword(password);
     }
@@ -47,17 +49,20 @@ class AuthServiceTest {
     @Test
     void testLoginUser_Success() throws Exception {
         when(userService.findByUsername(username)).thenReturn(Optional.of(testUserDTO));
+
         Authentication authentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(tokenService.generateToken(authentication)).thenReturn(token);
+
+        when(tokenService.generateToken(userId, authentication)).thenReturn(token);
 
         Optional<String> result = authService.loginUser(username, password);
 
         assertTrue(result.isPresent());
         assertEquals(token, result.get());
+
         verify(userService).findByUsername(username);
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(tokenService).generateToken(authentication);
+        verify(tokenService).generateToken(userId, authentication);
     }
 
     @Test
@@ -67,8 +72,9 @@ class AuthServiceTest {
         Optional<String> result = authService.loginUser(username, password);
 
         assertFalse(result.isPresent());
+
         verify(userService).findByUsername(username);
         verify(authenticationManager, never()).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(tokenService, never()).generateToken(any(Authentication.class));
+        verify(tokenService, never()).generateToken(any(Long.class), any(Authentication.class));
     }
 }

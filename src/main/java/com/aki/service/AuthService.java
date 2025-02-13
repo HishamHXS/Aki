@@ -38,7 +38,9 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            String token = tokenService.generateToken(authentication);
+            Long userId = user.getId();
+
+            String token = tokenService.generateToken(userId, authentication);
             logger.info("Login successful for username: {}", username);
             return Optional.of(token);
 
