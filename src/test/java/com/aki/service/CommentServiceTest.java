@@ -33,8 +33,8 @@ class CommentServiceTest {
     void setUp() {
         comment = new Comment();
         comment.setId(1L);
-        comment.setPostID(1L);
-        comment.setUserID(12L);
+        comment.setPostId(1L);
+        comment.setUserId(12L);
         comment.setContent("Test content");
         comment.setLikes(0);
 
@@ -73,16 +73,16 @@ class CommentServiceTest {
         assertEquals(comment.getContent(), retrievedComment.get().getContent());
     }
 
-//    @Test
-//    void testGetCommentsByPostId() {
-//        when(commentRepository.findById(1L)).thenReturn(List.of(comment));
-//
-//        List<CommentDTO> comments = commentService.getCommentsByPostId(1L);
-//
-//        assertFalse(comments.isEmpty());
-//        assertEquals(1, comments.size());
-//        assertEquals(comment.getContent(), comments.get(0).getContent());
-//    }
+    @Test
+    void testGetCommentsByPostId() {
+        when(commentRepository.findByPostId(1L)).thenReturn(Optional.of(List.of(comment)));
+
+        List<CommentDTO> comments = commentService.getCommentsByPostId(1L);
+
+        assertFalse(comments.isEmpty());
+        assertEquals(1, comments.size());
+        assertEquals(comment.getContent(), comments.getFirst().getContent());
+    }
 
     @Test
     void testUpdateComment() {

@@ -14,9 +14,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "user_id")
-    private long userID;
+    private long userId;
     @Column(name = "post_id")
-    private long postID;
+    private long postId;
     private String content;
     private int likes;
     @CreationTimestamp

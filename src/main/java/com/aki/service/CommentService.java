@@ -3,9 +3,11 @@ package com.aki.service;
 import com.aki.model.Comment;
 import com.aki.model.CommentDTO;
 import com.aki.repository.CommentRepository;
+import io.micrometer.observation.Observation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,8 +20,8 @@ public class CommentService {
 
     public CommentDTO createComment(CommentDTO commentDTO) {
         Comment comment = new Comment();
-        comment.setPostID(commentDTO.getPostId());
-        comment.setUserID(commentDTO.getUserId());
+        comment.setPostId(commentDTO.getPostId());
+        comment.setUserId(commentDTO.getUserId());
         comment.setContent(commentDTO.getContent());
 
         Comment savedComment = commentRepository.save(comment);
@@ -38,10 +40,12 @@ public class CommentService {
     }
 
     public List<CommentDTO> getCommentsByPostId(Long postId) {
-        return commentRepository.findById(postId)
-                .stream()
-                .map(CommentDTO::new)
-                .collect(Collectors.toList());
+        return commentRepository.findByPostId(postId)
+                .filter(comments -> !comments.isEmpty())
+                .map(comments -> comments.stream()
+                    .map(CommentDTO::new)
+                    .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     public Optional<CommentDTO> updateComment(Long id, CommentDTO commentDTO) {

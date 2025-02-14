@@ -1,6 +1,7 @@
 package com.aki.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +21,12 @@ public class CommentDTO {
 
     public CommentDTO(Comment comment) {
         setId(comment.getId());
-        setUserId(comment.getUserID());
-        setPostId(comment.getPostID());
+        setUserId(comment.getUserId());
+        setPostId(comment.getPostId());
         setContent(comment.getContent());
         setLikes(comment.getLikes());
         setCreatedAt(comment.getCreatedAt());
     }
+
+
 }
