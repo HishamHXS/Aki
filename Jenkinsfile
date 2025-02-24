@@ -1,43 +1,22 @@
 pipeline {
-    agent {
-        docker {
-            image 'openjdk:23-jdk'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
+
     environment {
-        source .env
-        DB_USER = ${DB_USER}
-        DB_PASS = ${DB_PASSWORD}
+        DB_USER = "${env.DB_USER}"
+        DB_PASS = "${env.DB_PASS}"
     }
+
     stages {
-        stage('Checkout Code') {
+        stage('Build and Test') {
             steps {
-                git 'https://github.com/HishamHXS/Aki.git'
+                script {
+                    withEnv(["DB_USER=${env.DB_USER}", "DB_PASS=${env.DB_PASS}"]) {
+                        sh '''
+                        ./mvnw test
+                        '''
+                    }
+                }
             }
-        }
-
-        stage('Build') {
-            steps {
-                sh './mvnw clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh './mvnw test'
-            }
-        }
-
-        stage('Deploy with Docker') {
-            steps {
-                sh 'docker compose down && docker compose up -d --build'
-            }
-        }
-    }
-    post {
-        always {
-            cleanWs()
         }
     }
 }
