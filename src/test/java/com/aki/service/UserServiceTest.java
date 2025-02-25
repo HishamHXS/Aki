@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @Mock
     private UserRepository userRepository;
 
